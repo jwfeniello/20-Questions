@@ -1,6 +1,6 @@
 # 20-Questions
 
-A portable C11 implementation of 20Q by Robin Burgener using the model recovered from the PSP release. Includes a small inference library and a playable command-line game.
+A portable C11 implementation of 20Q by Robin Burgener using the model from the PSP release. Includes a small inference library and a playable command-line game.
 
 ## Build
 
