@@ -1,0 +1,5 @@
+/build*/
+/reports/
+/evidence/
+__pycache__/
+*.pyc

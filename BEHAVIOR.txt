@@ -1,0 +1,109 @@
+Behavior and evidence
+=====================
+Reference: decrypted PSP NPEZ00175 executable, SHA-256
+52efc8494b0ea0be342e66632912eb6272ee97f541198f0f45959d2488aeb359.
+Addresses below are module-relative, not absolute PPSSPP runtime addresses.
+Existing extraction reports, model-code.c and readers.txt were the starting
+point. New Ghidra inspection is in evidence/flow-rng.txt and evidence/srand.txt.
+The existing Ghidra project was opened read-only; no game assets were changed.
+
+FUNCTION MAPPING
+0x10B3C reader and 0x106D0 conversion -> src/model.c:q20_read
+0xEB94 scoring -> src/engine.c:q20_score
+0xE474 Divide -> q20_divide; 0xE6D0 Isolate -> q20_isolate
+0xE96C random question -> q20_random_question
+0xF16C feedback and 0xF4F4 history feedback -> corresponding feedback helpers
+0xF7EC strategy/advance -> q20_advance
+0xFA80 answer submission and 0xEAA8 undo -> q20_submit
+0xFDCC defaults and 0xFE24 reset -> create/reset initialization
+0x155C0 RNG and 0x155B0 seed -> q20_rand and game seed
+
+PRESERVED BEHAVIOR
+Unsigned 32-bit arithmetic expresses wraparound; explicit signed conversion
+preserves signed comparisons without signed-overflow undefined behavior. Division
+uses truncation toward zero. Original iteration order and strict tie comparisons
+are retained. Scoring keeps the stable top 20 and applies previous-leader bonus
+min(counter,10), rejected-guess exclusion, category's first four columns and the
+original answer-table rewards/penalties. Strong matches AND mismatches double.
+The retained-score transformation subtracts best/3; the strict cutoff is
+max(0,best-best/3-32), using 48 instead of 32 at counter 19.
+Divide weights strong connections by three. Isolate has separate rival and
+leader strength handling; it is not generic information gain. The masks/defaults
+7,7,27,30 come from instructions, not the patent. Feedback lookup constants
+"DPNY", [3,4,1,2], "UAVMO" come from module 0x8E6B4/0x8E6BC/0x8E6C4.
+
+Category comes first. Flow uses leader-gap, candidate-count and question-counter
+conditions, including the 20/28 guess transitions, and terminates when counter
+exceeds 30. Unchanged leader selects Isolate before Divide. Accepted guesses set
+the outcome; rejected/close guesses remain in history for original exclusion.
+Unknown answer ID 0 does not advance the question counter. History has 260 slots;
+the original first-unknown eviction occurs above 16 unknowns or at capacity.
+Undo and history movement preserve original state effects.
+
+At 0xF9E0 the binary really calls random-question and then tests the unchanged
+selection register: the random routine's return is discarded. This is preserved,
+including random consumption before fallback guessing. It was not silently
+corrected based on the decompiler. Original getter mutations to temporary record
+metadata are not needed by this engine; original stored IDs remain preserved.
+
+RANDOMNESS
+Original helper: state=(state*1103515245+12345) modulo 2^32, output=state&0x7FFFFFFF.
+The original reentrant state word at 0x204D58 is initially 1; global 0x204FEC points
+to the reentrancy block at 0x204D00. The identified seed-helper caller is Lua's
+math.randomseed wrapper at 0x4CEDC. Other game/UI routines consume this same RNG.
+Standalone default seed is 1; --seed and restart explicitly seed this game's own
+state. Original reset 0xFE24 itself does not reseed the global generator.
+Equal nominal seeds therefore do NOT establish matching full PSP sessions.
+Matching engine state and the actual helper-output sequence are required.
+
+Tests can supply outputs through q20_set_random. The comparison oracle intercepts
+only 0x155C0, supplies v0 and returns via ra. A deliberately different controlled
+LCG (1664525,1013904223, masked output), or zero stream, supplies both sides.
+Consumption counts AND ordered output digests are compared. Reader, score,
+selection and flow instructions are not replaced or patched. A separate test
+executes the original RNG without interception for 4096 outputs at each of four
+seeds (0,1,0x7FFFFFFF,0xFFFFFFFF), agreeing with the portable generator.
+
+VALIDATION AND COVERAGE
+tests/oracle.py executes original MIPS instructions with Unicorn 2.1.4, module
+base 0; synthetic state 0x400000, model metadata 0x410000, target/question records
+0x420000/0x460000, stack 0x4FF000, return sentinel 0x3F0000. Original initializers
+set defaults. The original executable is hash-checked. Callback registry is empty.
+
+reports/edges.json: exhaustive accepted reader pairs in both formats across all
+six banks (4,054,564 comparisons), native checks including physically stored but
+rejected endpoints, invalid bounds, stored Unknown weak-negative scoring, RNG,
+random-return discard, full history, unknown eviction, undo, close guess and
+counter termination. Physical model entries total 2,037,477; accepted pairs total
+2,027,282. All packed bytes, including unused high nibble where present, survive.
+reports/scoring.json: 18 scoring fixtures compare full target scores, retained
+candidate IDs/scores/order/count, prior shortlist and leader statistics.
+reports/selection.json: 12 Divide/Isolate fixtures, including ties, empty and
+single-candidate states, strength differences and wrapping arithmetic.
+reports/transcripts.json: 11 controlled transcripts across all six banks compare
+advance/submit returns and mutable state words (0..0x2738 exclusive and
+0x6788..0x6840 exclusive), including history, decisions, counters, candidate
+ordering, outcomes and random consumption at each step. fixtures.json records
+inputs; uncertain, repeated Unknown, rejection and acceptance paths are included.
+These are original-instruction comparisons, not two pseudocode translations.
+reports/smoke.json: all six CLI banks, restart/trace, Greek rejection, complete
+seeded carrot game, corrupt-container rejection, byte-identical regeneration,
+and all 121 original extraction deliverables unchanged.
+
+EXPLICIT LIMITATIONS AND SAFETY DEPARTURE
+The random helper can select q==question_count, which the getter rejects.
+An original-instruction test with German bank/output145 observes a four-byte
+read from 0x18 at PC 0xE9C8 after that rejection. Standalone returns -2 instead
+of dereferencing NULL. It does not substitute another question or change bytes.
+The CLI reports the condition and permits restart/quit. This is a known deliberate
+departure; the other listed comparisons agree. Invalid host API use is rejected
+where practical rather than reproducing arbitrary PSP memory access.
+
+No complete live PPSSPP/UI session equivalence is claimed. Callback effects,
+graphics/audio, external Lua/UI random consumption, arbitrary corrupted states,
+all possible histories and externally changed target/question flags have not
+been exhaustively compared. Tests cover normal recovered defaults plus listed
+edge states. Full state comparisons exclude host-specific pointers and unneeded
+game metadata. No new learning, patent-derived weights or inference fallback is
+introduced. Greek remains unusable. The shipped model is used exactly; this
+does not establish equivalence to the physical toy, patent or online service.

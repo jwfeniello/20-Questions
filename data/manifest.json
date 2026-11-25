@@ -1,0 +1,84 @@
+{
+  "schema": "q20-container-1",
+  "sources": {
+    "auxiliary/tables.json": "2d6596880d8c4cef76ab44b6c119e62ac99a9c01a39b32545b0908b122520c27",
+    "auxiliary/fixed_tables.bin": "45743325292c761e4148cfd1f500c1dd9aa704d7ee582b74e1a82dd283dbdeb5",
+    "banks/en/parameters.packed4": "910555122142a43781d70aacf485575871b6c2e2740b25084d9dc72792fbd27d",
+    "banks/en/string_pool.bin": "ecb47979be028192be03cd9f696e64f5f137d9ae85d99d7f13d20d366c11c9db",
+    "banks/en/targets.json": "3795f39cace288057ac05e8577b359c62e3c66a131a63a7ccd2212501402c26c",
+    "banks/en/questions.json": "f6c10ea55f27cbd5b90d3cf942bb42ee081a072020cb512b3e1f3ace70a0be36",
+    "banks/de/parameters.packed4": "a66a50ebc3a9bfc4e8839580a9faabf5a5d613903f41f0c2366825280d87bf8a",
+    "banks/de/string_pool.bin": "fbb21855c2a6cf90488ad2a6a8b2a114368551d6423d2c21efcbbdf6449e8a01",
+    "banks/de/targets.json": "e737f837e23144cd4d4c9677e03ebf331c13d59a371d4c409aa52e5544a238d7",
+    "banks/de/questions.json": "de123d06b07780d00b4f386fbe5a2e7744b65bcb932e94e388cbe6da08942baf",
+    "banks/es/parameters.packed4": "ab9c6fda19833f0cc4d5b15ae314c635f1ff3cd0720010b880a2cd677a99949a",
+    "banks/es/string_pool.bin": "3f2c9986aad0e7d5f5e49a29b7868b1eb633d4ce6c2b8908e569a25c1afc6825",
+    "banks/es/targets.json": "3fc6af93ff546821a6aec1dbe151e3bbe4dfac95e814153e77d793057beb5d4b",
+    "banks/es/questions.json": "d352dab0985cd5859bfbf2dc6c0eae223b315a161ad1d59a131661a9dbbe6408",
+    "banks/fr/parameters.packed4": "984cc38be16bfabf01c61f5a31c9a2292b241199d1859cea063b4474488996e7",
+    "banks/fr/string_pool.bin": "978ff2c7d4c75efd4ad965bbf74a6055ca8c090b75061a4ecb1079c70868235b",
+    "banks/fr/targets.json": "659bc9941dfb163282d00ad81d2a10f31b1d45d5bf13c6996b589786b88e2e94",
+    "banks/fr/questions.json": "e0e3b264578b8a991ad95d9c9930ce747747817c49d7fd14fd6544312fbb473f",
+    "banks/it/parameters.packed4": "feeb42643a592b6486fb79115631d5a8a4c678464055970af22671bda20ebf73",
+    "banks/it/string_pool.bin": "1b7ef7fc3c9e45db8e9727bf0e678a1f74d9db0f864b79e0130f18947d849a93",
+    "banks/it/targets.json": "d212457507fa1f2ad0b1250241b49414da75e9b77d629a7756a7e118898e73be",
+    "banks/it/questions.json": "5a5a9f7e1e8d4cf73fea825977ff97db2f56f0c603db57f4ac24b788b6ebddef",
+    "banks/jp/parameters.packed4": "cc4100601b7ae7fcca9f0bab75877e16d5633099d3a4d271736c94c68475b60e",
+    "banks/jp/string_pool.bin": "cef26959c747ad1ee2d601f0f7fb8ded66905fff0c9adbe801714e0ca2d36563",
+    "banks/jp/targets.json": "2bd92a3b53b9a29607dcdc35e098f709fc1fa61005269efa61f83f95c721ee82",
+    "banks/jp/questions.json": "53f1f449a50e017ab63793adddfa78f57d699cc6e999df9e1f7c4fc15e2a6e3a"
+  },
+  "outputs": [
+    {
+      "file": "en.q20",
+      "size": 752444,
+      "sha256": "673932e052b5eeead9adb42ca9d049456193dea1b779f2bf5931dd06016e4633",
+      "targets": 3083,
+      "questions": 369,
+      "packed_sha256": "910555122142a43781d70aacf485575871b6c2e2740b25084d9dc72792fbd27d"
+    },
+    {
+      "file": "de.q20",
+      "size": 168955,
+      "sha256": "b20fa55ce21978f3fdbf55c580b04b6d40cee3101985aa797d514d27203c2269",
+      "targets": 1200,
+      "questions": 150,
+      "packed_sha256": "a66a50ebc3a9bfc4e8839580a9faabf5a5d613903f41f0c2366825280d87bf8a"
+    },
+    {
+      "file": "es.q20",
+      "size": 169329,
+      "sha256": "fd988c55cd0cfb933f14c2554d2505f73d3aadf758cff447a4a52556339c8a2e",
+      "targets": 1200,
+      "questions": 150,
+      "packed_sha256": "ab9c6fda19833f0cc4d5b15ae314c635f1ff3cd0720010b880a2cd677a99949a"
+    },
+    {
+      "file": "fr.q20",
+      "size": 171341,
+      "sha256": "af8bdaa099159d1414e0b13e7a96e332aea43069790a634230c88d23aa122766",
+      "targets": 1199,
+      "questions": 150,
+      "packed_sha256": "984cc38be16bfabf01c61f5a31c9a2292b241199d1859cea063b4474488996e7"
+    },
+    {
+      "file": "it.q20",
+      "size": 166927,
+      "sha256": "a8dce394699cd1d08993583e1882dbf2886728a789cf55966c4f55cfac8284eb",
+      "targets": 1200,
+      "questions": 150,
+      "packed_sha256": "feeb42643a592b6486fb79115631d5a8a4c678464055970af22671bda20ebf73"
+    },
+    {
+      "file": "jp.q20",
+      "size": 170717,
+      "sha256": "ca961d635966e367481a2dc22410db8383bd3fec5ccda96fb1e3e02fd514fabb",
+      "targets": 1200,
+      "questions": 150,
+      "packed_sha256": "cc4100601b7ae7fcca9f0bab75877e16d5633099d3a4d271736c94c68475b60e"
+    }
+  ],
+  "unsupported": {
+    "el": "Incomplete zero stub, not a usable model"
+  }
+}

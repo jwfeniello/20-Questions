@@ -1,0 +1,43 @@
+Q20PSP1 container, version 1
+===========================
+All integer fields are unsigned little-endian 32-bit unless specified. There is
+no compression or native pointer dependency. The 64-byte header is:
+  0: 8 bytes "Q20PSP1\0"; 8: version=1; 12: target physical count T;
+  16: question physical count Q; 20: packed byte length; 24: raw pool length;
+  28: display-text blob length; 32: CRC32 of body; 36: body length;
+  40: four-byte language field (two ASCII characters, two zeroes);
+  44: fixed-table length=1228; 48..63: reserved zeroes.
+The body concatenates, without padding:
+  1. Original parameters.packed4 bytes, including excluded endpoint slots.
+  2. Original string_pool.bin bytes.
+  3. T target records then Q question records, each four u32 fields:
+     stored record ID, decimal prefix value (FFFFFFFF if absent), display-text
+     offset, raw-pool offset. Record position is the physical slot.
+  4. Original 1228-byte fixed_tables.bin, module 0x2045A0..0x204A6C exclusive.
+     Original pointer bit patterns are retained, not used as host pointers.
+  5. 24 u32 display-text offsets: 13 answer, six category, five guess labels.
+  6. UTF-8, NUL-terminated display text. Offsets refer to this blob, not file.
+
+Source/output hashes and dimensions are in data/manifest.json. Source paths are
+relative to ../output/data. The converter checks the existing extraction manifest
+before consuming files. Original raw strings retain prefixes and leading zeroes;
+display strings strip the original numeric prefix/whitespace and include the
+recovered category labels for the empty category-column strings. IDs are not
+merged, renumbered or inferred by similar names.
+
+Physical slot, reader ID, stored record ID and decimal text prefix are distinct.
+For valid reader IDs q,t, index i=(t-1)*Q+(q-1). Byte offset is floor(i/2);
+shift is 4*(i modulo 2), so low nibble comes first. Strict validity is
+1 <= q < Q and 1 <= t < T. Thus the last physical row/column remain stored but
+are rejected by the original reader. Invalid result is 0xFFFFFFFF. Format 2 is
+((code & 8) != 0) | (((code & 7) > 2) << 1). It is a derived inference view;
+format 4 and the original bytes remain authoritative. Codes 0,1,2 are weak
+negative in the implemented inference paths, not neutral. Player answer IDs
+are a separate namespace. Printable conversion is not used to rebuild codes.
+
+Answer/category/guess tables determine scoring constants and symbols. Constants
+embedded in instructions are documented in BEHAVIOR.txt and the C source; their
+use does not establish that they were learned. No upstream training weights or
+missing precision have been reconstructed. The loader checks structure, lengths,
+offsets, string termination and CRC; reproducible source identity is established
+by the converter and SHA-256 manifests, not by CRC alone.

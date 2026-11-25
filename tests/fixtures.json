@@ -1,0 +1,21 @@
+{
+  "scoring_histories": [
+    [],
+    [[0,1,1]],
+    [[0,1,2]],
+    [[0,1,3]],
+    [[0,1,4]],
+    [[0,1,0]],
+    [[0,1,1],[5,2,2],[12,2,1],[33,2,8]],
+    [[0,1,4],[5,2,0],[11,2,5],[47,2,7],[19,2,6],[8,2,11],[9,2,10],[21,2,9]],
+    [[0,1,2],[1,3,1],[5,2,3],[30,2,4]]
+  ],
+  "history_tuple": ["id", "kind", "player_answer_id"],
+  "transcripts": [
+    ["en","truth",1], ["en","truth",55], ["en","uncertain",5],
+    ["en","unknown",1], ["en","reject",1], ["en","accept",12],
+    ["de","truth",7], ["es","truth",21], ["fr","truth",35],
+    ["it","truth",10], ["jp","truth",15]
+  ],
+  "controlled_random": "Stream in oracle.py: state=state*1664525+1013904223 mod 2^32; output state & 0x7fffffff. Deliberately not the original generator; exactly the same outputs supplied to both implementations."
+}
